@@ -8,6 +8,7 @@ const deckDivCss = css`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  gap: 10px;
 `;
 
 const cardBtnCss = css`
@@ -34,6 +35,15 @@ function App() {
     const data = await response.json();
     return await data;
   }
+
+  window.addEventListener("resize", () => {
+    const dom = document.getElementById("deckContainer");
+    const columns = Math.min(Math.trunc(window.innerWidth / 150), 5);
+    const gap = 10;
+    const columnWidth = 150;
+    const width = (columns - 1) * gap + columns * columnWidth;
+    dom.style.width = `${width}px`;
+  });
 
   function addData(sourceURL) {
     getData(sourceURL).then((result) => {
@@ -155,7 +165,7 @@ function App() {
       <button onClick={newGame}>New Game</button>
       <p>Score: {score}</p>
       <p>High Score: {hiscore}</p>
-      <div css={deckDivCss}>
+      <div css={deckDivCss} id="deckContainer">
         {(deck.length > 0 &&
           deck.map((n) => {
             return (
