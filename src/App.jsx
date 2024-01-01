@@ -36,7 +36,7 @@ function App() {
       //filter out non-normal layout cards
       let newData = result.data;
       newData = newData.filter((n) => n.layout === "normal");
-      setdata((prev) => [...prev, ...structuredClone(newData)]);
+      setdata([...data, ...structuredClone(newData)]);
       //check if there are more pages of cards
       if (result.has_more) {
         setnextpage(result.next_page);
@@ -45,20 +45,30 @@ function App() {
       }
     });
   }
-  useEffect(() => {
-    addData(sourceURL);
-  }, []);
-
-  useEffect(() => {
+  function updateDataIndex() {
     let arr = [];
-    let i = dataIndex.length;
+    let i = 0;
+    if (data.length > 0 && dataIndex !== undefined) {
+      i += dataIndex.length;
+    }
     if (data.length > 0) {
       while (i < data.length) {
         arr.push(i);
         i += 1;
       }
-      setdataindex(_.shuffle(arr));
+      setdataindex((prev) => {
+        if (prev !== undefined) {
+          return [...prev, ..._.shuffle(arr)];
+        } else return [..._.shuffle(arr)];
+      });
     }
+  }
+  useEffect(() => {
+    addData(sourceURL);
+  }, []);
+
+  useEffect(() => {
+    updateDataIndex();
   }, [data]);
 
   const handleSetup = () => {
@@ -71,7 +81,6 @@ function App() {
 
   const handleChooseCard = (e) => {
     let cardIndex = e.target.dataset.index;
-    console.log(cardIndex);
     //valid choice
     if (!discard.includes(cardIndex)) {
       setdiscard((preState) => {
@@ -102,11 +111,18 @@ function App() {
     }
   };
 
+  const addMoreCards = () => {
+    if (nextpage !== null) {
+      addData(nextpage);
+    }
+  };
+
   const loading = "Loading...";
 
   return (
     <>
       <button onClick={handleSetup}>setup</button>
+      <button onClick={addMoreCards}>Add More Cards</button>
       <div css={deckDivCss}>
         {(deck.length > 0 &&
           deck.map((n) => {
