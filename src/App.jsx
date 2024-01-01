@@ -1,47 +1,104 @@
 import { useState, useEffect } from "react";
-/** @jsx jsx */
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import "./App.css";
 import _ from "lodash";
 
-async function getData() {
-  const response = await fetch(
-    "https://api.scryfall.com/cards/search?include_extras=true&include_variations=true&order=set&q=e%3Awho&unique=prints"
-  );
-  const data = await response.json();
-  return await data;
-}
+const deckDivCss = css`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
+
+const cardBtnCss = css`
+  padding: 0;
+`;
 
 function App() {
+  const sourceURL =
+    "https://api.scryfall.com/cards/search?include_extras=true&include_variations=true&order=set&q=e%3Awho&unique=prints";
   const [data, setdata] = useState([]);
-  const [index, setindex] = useState([]);
+  const [nextpage, setnextpage] = useState(null);
+  const [dataIndex, setdataindex] = useState([]);
   const [pool, setpool] = useState([]);
   const [deck, setdeck] = useState([]);
+  const [discard, setdiscard] = useState([]);
   const [step, setstep] = useState(1);
   const [range, setrange] = useState(10);
   const [gamesize, setgamesize] = useState(10);
-  useEffect(() => {
-    getData().then((result) => {
-      setdata(structuredClone(result.data));
+  async function getData(sourceURL) {
+    const response = await fetch(sourceURL);
+    const data = await response.json();
+    return await data;
+  }
+  function addData(sourceURL) {
+    getData(sourceURL).then((result) => {
+      //filter out non-normal layout cards
+      let newData = result.data;
+      newData = newData.filter((n) => n.layout === "normal");
+      setdata((prev) => [...prev, ...structuredClone(newData)]);
+      //check if there are more pages of cards
+      if (result.has_more) {
+        setnextpage(result.next_page);
+      } else {
+        setnextpage(null);
+      }
     });
+  }
+  useEffect(() => {
+    addData(sourceURL);
   }, []);
 
   useEffect(() => {
     let arr = [];
-    let i = 0;
+    let i = dataIndex.length;
     if (data.length > 0) {
       while (i < data.length) {
         arr.push(i);
         i += 1;
       }
-      setindex(_.shuffle(arr));
+      setdataindex(_.shuffle(arr));
     }
   }, [data]);
 
-  const handleShuffle = () => {
-    if (index.length > range && pool.length == 0) {
-      setpool(index.slice(0, range));
-      setdeck(index.slice(0, range));
+  const handleSetup = () => {
+    if (dataIndex.length > range && pool.length == 0) {
+      setpool(dataIndex.slice(0, range));
+      setdeck(dataIndex.slice(0, range));
+      setdiscard([]);
+    }
+  };
+
+  const handleChooseCard = (e) => {
+    let cardIndex = e.target.dataset.index;
+    console.log(cardIndex);
+    //valid choice
+    if (!discard.includes(cardIndex)) {
+      setdiscard((preState) => {
+        let newState = [...preState];
+        newState.push(cardIndex);
+        return newState;
+      });
+
+      // make sure there's new cards
+      if (range + step <= dataIndex.length) {
+        let temppool = [...pool];
+        let tempdeck = [...deck];
+        let newCards = dataIndex.slice(range, range + step);
+        //add new cards to pool
+        temppool = [...temppool, ...newCards];
+
+        //shuffle deck, add new cards on current hand
+        tempdeck = _.shuffle(tempdeck);
+        tempdeck = [...newCards, ...tempdeck.slice(0, gamesize - step)];
+        tempdeck = _.shuffle(tempdeck);
+
+        //update states
+        setpool([...temppool]);
+        setdeck([...tempdeck]);
+        //update marker for cards used
+        setrange((prev) => prev + step);
+      }
     }
   };
 
@@ -49,11 +106,25 @@ function App() {
 
   return (
     <>
-      <button onClick={handleShuffle}>shuffle</button>
-      <div>
+      <button onClick={handleSetup}>setup</button>
+      <div css={deckDivCss}>
         {(deck.length > 0 &&
           deck.map((n) => {
-            return <button key={n}>{n}</button>;
+            return (
+              <button
+                key={data[n].oracle_id}
+                onClick={handleChooseCard}
+                data-index={n}
+                css={cardBtnCss}
+              >
+                {/* {data[n].name} */}
+                <img
+                  src={data[n].image_uris.small}
+                  alt={data[n].name}
+                  data-index={n}
+                ></img>
+              </button>
+            );
           })) ||
           loading}
       </div>
