@@ -17,6 +17,7 @@ const cardBtnCss = css`
 function App() {
   const sourceURL =
     "https://api.scryfall.com/cards/search?include_extras=true&include_variations=true&order=set&q=e%3Awho&unique=prints";
+  const [active, setactive] = useState(false);
   const [data, setdata] = useState([]);
   const [nextpage, setnextpage] = useState(null);
   const [dataIndex, setdataindex] = useState([]);
@@ -33,6 +34,7 @@ function App() {
     const data = await response.json();
     return await data;
   }
+
   function addData(sourceURL) {
     getData(sourceURL).then((result) => {
       //filter out non-normal layout cards
@@ -73,48 +75,60 @@ function App() {
     updateDataIndex();
   }, [data]);
 
-  const handleSetup = () => {
-    if (dataIndex.length > range && pool.length == 0) {
-      setpool(dataIndex.slice(0, range));
-      setdeck(dataIndex.slice(0, range));
+  const newGame = () => {
+    if (dataIndex.length > gamesize) {
+      let copy = [...dataIndex];
+      copy = _.shuffle(copy);
+      console.log(copy);
+      setdataindex([...copy]);
+      setpool(copy.slice(0, gamesize));
+      setdeck(copy.slice(0, gamesize));
       setdiscard([]);
+      setscore(0);
+      setactive(true);
     }
   };
 
   const handleChooseCard = (e) => {
-    let cardIndex = e.target.dataset.index;
-    //valid choice
-    if (!discard.includes(cardIndex)) {
-      setdiscard((preState) => {
-        let newState = [...preState];
-        newState.push(cardIndex);
-        return newState;
-      });
-
-      // see if we have to add more cards
-      if (range + step >= dataIndex.length) {
-        addMoreCards();
+    if (active) {
+      let cardIndex = e.target.dataset.index;
+      //game over
+      if (discard.includes(cardIndex)) {
+        setactive(false);
       }
-      // make sure there's new cards
-      if (range + step <= dataIndex.length) {
-        let temppool = [...pool];
-        let tempdeck = [...deck];
-        let newCards = dataIndex.slice(range, range + step);
-        //add new cards to pool
-        temppool = [...temppool, ...newCards];
+      //valid choice
+      else if (!discard.includes(cardIndex)) {
+        setdiscard((preState) => {
+          let newState = [...preState];
+          newState.push(cardIndex);
+          return newState;
+        });
 
-        //shuffle deck, add new cards on current hand
-        tempdeck = _.shuffle(tempdeck);
-        tempdeck = [...newCards, ...tempdeck.slice(0, gamesize - step)];
-        tempdeck = _.shuffle(tempdeck);
+        // see if we have to add more cards
+        if (range + step >= dataIndex.length) {
+          addMoreCards();
+        }
+        // make sure there's new cards
+        if (range + step <= dataIndex.length) {
+          let temppool = [...pool];
+          let tempdeck = [...deck];
+          let newCards = dataIndex.slice(range, range + step);
+          //add new cards to pool
+          temppool = [...temppool, ...newCards];
 
-        //update states
-        setpool([...temppool]);
-        setdeck([...tempdeck]);
-        //update marker for cards used
-        setrange((prev) => prev + step);
-        //update score
-        updateScore();
+          //shuffle deck, add new cards on current hand
+          tempdeck = _.shuffle(tempdeck);
+          tempdeck = [...newCards, ...tempdeck.slice(0, gamesize - step)];
+          tempdeck = _.shuffle(tempdeck);
+
+          //update states
+          setpool([...temppool]);
+          setdeck([...tempdeck]);
+          //update marker for cards used
+          setrange((prev) => prev + step);
+          //update score
+          updateScore();
+        }
       }
     }
   };
@@ -138,7 +152,7 @@ function App() {
 
   return (
     <>
-      <button onClick={handleSetup}>setup</button>
+      <button onClick={newGame}>New Game</button>
       <p>Score: {score}</p>
       <p>High Score: {hiscore}</p>
       <div css={deckDivCss}>
