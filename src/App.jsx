@@ -26,6 +26,8 @@ function App() {
   const [step, setstep] = useState(1);
   const [range, setrange] = useState(10);
   const [gamesize, setgamesize] = useState(10);
+  const [score, setscore] = useState(0);
+  const [hiscore, sethiscore] = useState(0);
   async function getData(sourceURL) {
     const response = await fetch(sourceURL);
     const data = await response.json();
@@ -89,6 +91,10 @@ function App() {
         return newState;
       });
 
+      // see if we have to add more cards
+      if (range + step >= dataIndex.length) {
+        addMoreCards();
+      }
       // make sure there's new cards
       if (range + step <= dataIndex.length) {
         let temppool = [...pool];
@@ -107,9 +113,20 @@ function App() {
         setdeck([...tempdeck]);
         //update marker for cards used
         setrange((prev) => prev + step);
+        //update score
+        updateScore();
       }
     }
   };
+
+  function updateScore() {
+    let base = discard.length + 1;
+    let tempscore = Math.trunc(Math.pow(base, 1.5));
+    setscore(tempscore);
+    if (tempscore > hiscore) {
+      sethiscore(tempscore);
+    }
+  }
 
   const addMoreCards = () => {
     if (nextpage !== null) {
@@ -122,7 +139,8 @@ function App() {
   return (
     <>
       <button onClick={handleSetup}>setup</button>
-      <button onClick={addMoreCards}>Add More Cards</button>
+      <p>Score: {score}</p>
+      <p>High Score: {hiscore}</p>
       <div css={deckDivCss}>
         {(deck.length > 0 &&
           deck.map((n) => {
