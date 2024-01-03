@@ -15,6 +15,18 @@ const cardBtnCss = css`
   padding: 0;
 `;
 
+const imgcss = css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -999;
+  > img {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+  }
+`;
+
 function App() {
   const sourceURL =
     "https://api.scryfall.com/cards/search?include_extras=true&include_variations=true&order=set&q=e%3Awho&unique=prints";
@@ -162,6 +174,12 @@ function App() {
 
   return (
     <>
+      <picture css={imgcss}>
+        <source media="(min-width: 1200px)" srcSet="xl.jpg"></source>
+        <source media="(min-width: 450px)" srcSet="lg.jpg"></source>
+        <source srcSet="sm.jpg"></source>
+        <img src="xl.jpg"></img>
+      </picture>
       <button onClick={newGame}>New Game</button>
       <p>Score: {score}</p>
       <p>High Score: {hiscore}</p>
