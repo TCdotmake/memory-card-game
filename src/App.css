@@ -3,3 +3,16 @@
 
   text-align: center;
 }
+
+.fade-appear {
+  opacity: 0;
+}
+
+.fade-appear-active {
+  opacity: 1;
+  transition: opacity 5000ms;
+}
+
+.fade-appear-done {
+  opacity: 1;
+}

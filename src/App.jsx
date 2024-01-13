@@ -1,18 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+import { ClassNames, css } from "@emotion/react";
 import "./App.css";
 import _ from "lodash";
 
-const deckDivCss = css`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 10px;
-`;
+import { CSSTransition } from "react-transition-group";
+import { Carousel } from "./Carousel";
 
-const cardBtnCss = css`
-  padding: 0;
+const maincss = css`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
 `;
 
 const imgcss = css`
@@ -42,20 +44,12 @@ function App() {
   const [gamesize, setgamesize] = useState(10);
   const [score, setscore] = useState(0);
   const [hiscore, sethiscore] = useState(0);
+  const nodeRef = useRef(null);
   async function getData(sourceURL) {
     const response = await fetch(sourceURL);
     const data = await response.json();
     return await data;
   }
-
-  window.addEventListener("resize", () => {
-    const dom = document.getElementById("deckContainer");
-    const columns = Math.min(Math.trunc(window.innerWidth / 150), 5);
-    const gap = 10;
-    const columnWidth = 150;
-    const width = (columns - 1) * gap + columns * columnWidth;
-    dom.style.width = `${width}px`;
-  });
 
   function addData(sourceURL) {
     getData(sourceURL).then((result) => {
@@ -95,6 +89,7 @@ function App() {
 
   useEffect(() => {
     updateDataIndex();
+    console.log(data[0]);
   }, [data]);
 
   const newGame = () => {
@@ -170,40 +165,46 @@ function App() {
     }
   };
 
-  const loading = "Loading...";
-
   return (
     <>
-      <picture css={imgcss}>
-        <source media="(min-width: 1200px)" srcSet="xl.jpg"></source>
-        <source media="(min-width: 450px)" srcSet="lg.jpg"></source>
-        <source srcSet="sm.jpg"></source>
-        <img src="xl.jpg"></img>
-      </picture>
-      <button onClick={newGame}>New Game</button>
-      <p>Score: {score}</p>
-      <p>High Score: {hiscore}</p>
-      <div css={deckDivCss} id="deckContainer">
-        {(deck.length > 0 &&
-          deck.map((n) => {
-            return (
-              <button
-                key={data[n].oracle_id}
-                onClick={handleChooseCard}
-                data-index={n}
-                css={cardBtnCss}
-              >
-                {/* {data[n].name} */}
-                <img
-                  src={data[n].image_uris.small}
-                  alt={data[n].name}
-                  data-index={n}
-                ></img>
-              </button>
-            );
-          })) ||
-          loading}
-      </div>
+      <main css={maincss}>
+        <picture css={imgcss}>
+          <source media="(min-width: 1200px)" srcSet="xl.jpg"></source>
+          <source media="(min-width: 450px)" srcSet="lg.jpg"></source>
+          <source srcSet="sm.jpg"></source>
+          <img src="xl.jpg"></img>
+        </picture>
+        <div
+          css={css`
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-direction: row;
+          `}
+        >
+          <button onClick={newGame} ref={nodeRef}>
+            New Game
+          </button>
+          <div
+            css={css`
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-direction: column;
+
+              > p {
+                padding: 0;
+                margin: 0;
+              }
+            `}
+          >
+            <p>Score: {score}</p>
+            <p>High Score: {hiscore}</p>
+          </div>
+        </div>
+
+        <Carousel data={data} deck={deck} handleChooseCard={handleChooseCard} />
+      </main>
     </>
   );
 }
