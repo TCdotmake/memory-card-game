@@ -8,20 +8,41 @@ const cardBtnCss = css`
 `;
 
 const cardContainer = css`
+  width: 100vw;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: min(2vw, 1rem);
   background: rgba(255, 255, 255, 0.3);
-  padding: 1rem 0;
+  padding: 2rem 0;
+  @media (orientation: landscape) {
+    display: grid;
+    grid-template-columns: repeat(5, auto);
+  }
+  @media (orientation: portrait) and (max-width: 500px) {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+  }
 `;
 
 const artcss = css`
-  width: 140px;
+  width: min(20vw, 200px);
   aspect-ratio: 1.4 / 1;
   object-fit: cover;
+  @media (orientation: portrait) {
+    width: 140px;
+  }
+  @media (orientation: portrait) and (min-width: 600px) {
+    width: 200px;
+  }
+  @media (orientation: landscape) {
+    max-width: 18vw;
+  }
+  @media (orientation: portrait) and (max-width: 500px) {
+    width: min(200px, 40vw);
+  }
 `;
 
 function Carousel({ data, deck, handleChooseCard }) {

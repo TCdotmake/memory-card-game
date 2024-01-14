@@ -15,6 +15,10 @@ const maincss = css`
   align-items: center;
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
+  @media (orientation: portrait) {
+    height: max(800px, 100vh);
+  }
 `;
 
 const imgcss = css`
@@ -22,9 +26,10 @@ const imgcss = css`
   top: 0;
   left: 0;
   z-index: -999;
+  height: 100%;
   > img {
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     object-fit: cover;
   }
 `;
