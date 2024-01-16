@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+import { useState } from "react";
 
 const cardBtnCss = css`
   border-radius: 0;
@@ -15,8 +16,8 @@ const cardContainer = css`
   justify-content: center;
   align-items: center;
   gap: min(2vw, 1rem);
-  background: rgba(255, 255, 255, 0.3);
-  padding: 2rem 0;
+  background: var(--transbg);
+  padding: 3vh 0;
   @media (orientation: landscape) {
     display: grid;
     grid-template-columns: repeat(5, auto);
@@ -46,6 +47,10 @@ const artcss = css`
 `;
 
 function Carousel({ data, deck, handleChooseCard }) {
+  const [load, setload] = useState(0);
+  const onload = () => {
+    setload(load + 1);
+  };
   const content = deck.map((n) => {
     return (
       <button
@@ -55,6 +60,7 @@ function Carousel({ data, deck, handleChooseCard }) {
         css={cardBtnCss}
       >
         <img
+          onLoad={onload}
           src={data[n].image_uris.art_crop}
           alt={data[n].name}
           data-index={n}

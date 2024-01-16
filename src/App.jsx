@@ -6,8 +6,10 @@ import _ from "lodash";
 
 import { CSSTransition } from "react-transition-group";
 import { Carousel } from "./Carousel";
-
+import logoH from "../public/logo-900x150.png";
+import logoV from "../public/logo-650x407.png";
 const maincss = css`
+  background: var(--transdark);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -31,6 +33,24 @@ const imgcss = css`
     width: 100vw;
     height: 100%;
     object-fit: cover;
+  }
+`;
+
+const scorecss = css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  background: var(--transbg);
+
+  > p {
+    padding: 0;
+    margin: 10vw;
   }
 `;
 
@@ -179,6 +199,16 @@ function App() {
           <source srcSet="sm.jpg"></source>
           <img src="xl.jpg"></img>
         </picture>
+        <button onClick={newGame} ref={nodeRef}>
+          New Game
+        </button>
+        <img
+          src={logoH}
+          css={css`
+            max-height: 20vh;
+            max-width: 90vw;
+          `}
+        />
         <div
           css={css`
             display: flex;
@@ -187,28 +217,18 @@ function App() {
             flex-direction: row;
           `}
         >
-          <button onClick={newGame} ref={nodeRef}>
-            New Game
-          </button>
-          <div
-            css={css`
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              flex-direction: column;
-
-              > p {
-                padding: 0;
-                margin: 0;
-              }
-            `}
-          >
-            <p>Score: {score}</p>
+          <div css={scorecss}>
             <p>High Score: {hiscore}</p>
+            <p>Score: {score}</p>
           </div>
         </div>
-
-        <Carousel data={data} deck={deck} handleChooseCard={handleChooseCard} />
+        {deck.length > 0 && (
+          <Carousel
+            data={data}
+            deck={deck}
+            handleChooseCard={handleChooseCard}
+          />
+        )}
       </main>
     </>
   );
