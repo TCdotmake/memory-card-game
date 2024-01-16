@@ -110,6 +110,7 @@ function App() {
   }
   useEffect(() => {
     addData(sourceURL);
+    loadLogo();
   }, []);
 
   useEffect(() => {
@@ -190,6 +191,17 @@ function App() {
     }
   };
 
+  const loadLogo = () => {
+    const img = document.getElementById("mainLogo");
+    if (window.innerHeight > window.innerWidth) {
+      img.src = logoV;
+    } else {
+      img.src = logoH;
+    }
+  };
+
+  window.addEventListener("resize", loadLogo);
+
   return (
     <>
       <main css={maincss}>
@@ -199,13 +211,13 @@ function App() {
           <source srcSet="sm.jpg"></source>
           <img src="xl.jpg"></img>
         </picture>
-        <button onClick={newGame} ref={nodeRef}>
-          New Game
-        </button>
+        {!active && <button onClick={newGame}>New Game</button>}
+
         <img
+          id="mainLogo"
           src={logoH}
           css={css`
-            max-height: 20vh;
+            max-height: 15vh;
             max-width: 90vw;
           `}
         />
