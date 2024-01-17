@@ -8,18 +8,23 @@ import { CSSTransition } from "react-transition-group";
 import { Carousel } from "./Carousel";
 import logoH from "../public/logo-900x150.png";
 import logoV from "../public/logo-650x407.png";
+import { Menu } from "./Menu";
+import { Retry } from "./Retry";
 const maincss = css`
   background: var(--transdark);
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   overflow: hidden;
   @media (orientation: portrait) {
     height: max(800px, 100vh);
+  }
+  @media (orientation: landscape) {
+    justify-content: center;
   }
 `;
 
@@ -54,9 +59,20 @@ const scorecss = css`
   }
 `;
 
+const logocss = css`
+  margin: 2vh 5vw 2vh 5vw;
+  @media (orientation: portrait) {
+    max-width: 75vw;
+  }
+  @media (orientation: landscape) {
+    max-height: 20vh;
+  }
+`;
+
 function App() {
   const sourceURL =
     "https://api.scryfall.com/cards/search?include_extras=true&include_variations=true&order=set&q=e%3Awho&unique=prints";
+  const [freshload, setfreshload] = useState(true);
   const [active, setactive] = useState(false);
   const [data, setdata] = useState([]);
   const [nextpage, setnextpage] = useState(null);
@@ -122,7 +138,7 @@ function App() {
     if (dataIndex.length > gamesize) {
       let copy = [...dataIndex];
       copy = _.shuffle(copy);
-      console.log(copy);
+      setfreshload(false);
       setdataindex([...copy]);
       setpool(copy.slice(0, gamesize));
       setdeck(copy.slice(0, gamesize));
@@ -211,36 +227,31 @@ function App() {
           <source srcSet="sm.jpg"></source>
           <img src="xl.jpg"></img>
         </picture>
-        {!active && <button onClick={newGame}>New Game</button>}
 
-        <img
-          id="mainLogo"
-          src={logoH}
-          css={css`
-            max-height: 15vh;
-            max-width: 90vw;
-          `}
-        />
+        <img id="mainLogo" src={logoH} css={logocss} />
+        {freshload && (
+          <Menu score={score} hiscore={hiscore} newGame={newGame} />
+        )}
         <div
           css={css`
+            position: relative;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            flex-direction: row;
           `}
         >
-          <div css={scorecss}>
-            <p>High Score: {hiscore}</p>
-            <p>Score: {score}</p>
-          </div>
+          {!active && !freshload && (
+            <Retry score={score} hiscore={hiscore} newGame={newGame} />
+          )}
+
+          {deck.length > 0 && (
+            <Carousel
+              data={data}
+              deck={deck}
+              handleChooseCard={handleChooseCard}
+            />
+          )}
         </div>
-        {deck.length > 0 && (
-          <Carousel
-            data={data}
-            deck={deck}
-            handleChooseCard={handleChooseCard}
-          />
-        )}
       </main>
     </>
   );

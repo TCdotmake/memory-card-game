@@ -10,6 +10,7 @@ const cardBtnCss = css`
 
 const cardContainer = css`
   width: 100vw;
+
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -36,7 +37,7 @@ const artcss = css`
     width: 140px;
   }
   @media (orientation: portrait) and (min-width: 600px) {
-    width: 200px;
+    width: 180px;
   }
   @media (orientation: landscape) {
     max-width: 18vw;
