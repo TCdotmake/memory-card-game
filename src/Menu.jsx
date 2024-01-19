@@ -1,23 +1,19 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-
-const menucss = css`
-  min-width: 275px;
-  z-index: 2;
-  color: white;
-  background: var(--transdark);
-  padding: 1.5rem;
-  border-radius: 10px;
-  border: 2px solid white;
-`;
+import { modalstyle, ngbtn } from "./modalstyle";
 
 function Menu({ score, hiscore, newGame }) {
   return (
-    <div css={menucss}>
+    <div css={[modalstyle]}>
       <h2>Memory Card Game</h2>
-      <p>Score: {score}</p>
-      <p>Hi-Score: {hiscore}</p>
-      <button onClick={newGame}>New Game</button>
+      <p>
+        Choose as many cards as you can without picking the same card twice!
+      </p>
+
+      <h3>High Score: {hiscore}</h3>
+      <button css={ngbtn} onClick={newGame}>
+        New Game
+      </button>
     </div>
   );
 }

@@ -6,6 +6,7 @@ const cardBtnCss = css`
   border-radius: 0;
   border: none;
   padding: 0;
+  filter: drop-shadow(5px 5px 7px #424242);
 `;
 
 const cardContainer = css`
@@ -18,6 +19,7 @@ const cardContainer = css`
   align-items: center;
   gap: min(2vw, 1rem);
   background: var(--transbg);
+  margin-top: 2vh;
   padding: 3vh 0;
   @media (orientation: landscape) {
     display: grid;

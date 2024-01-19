@@ -10,6 +10,7 @@ import logoH from "../public/logo-900x150.png";
 import logoV from "../public/logo-650x407.png";
 import { Menu } from "./Menu";
 import { Retry } from "./Retry";
+import { Collage } from "./collage";
 const maincss = css`
   background: var(--transdark);
   position: relative;
@@ -22,9 +23,6 @@ const maincss = css`
   overflow: hidden;
   @media (orientation: portrait) {
     height: max(800px, 100vh);
-  }
-  @media (orientation: landscape) {
-    justify-content: center;
   }
 `;
 
@@ -60,12 +58,13 @@ const scorecss = css`
 `;
 
 const logocss = css`
-  margin: 2vh 5vw 2vh 5vw;
+  margin: 2vh 5vw 0 5vw;
   @media (orientation: portrait) {
     max-width: 75vw;
   }
   @media (orientation: landscape) {
     max-height: 20vh;
+    margin-top: 10vh;
   }
 `;
 
@@ -229,9 +228,7 @@ function App() {
         </picture>
 
         <img id="mainLogo" src={logoH} css={logocss} />
-        {freshload && (
-          <Menu score={score} hiscore={hiscore} newGame={newGame} />
-        )}
+        {freshload && <Collage hiscore={hiscore} newGame={newGame} />}
         <div
           css={css`
             position: relative;
