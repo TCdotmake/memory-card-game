@@ -10,6 +10,7 @@ import logoV from "../public/logo-650x407.png";
 import { Retry } from "./Retry";
 import { Collage } from "./Collage";
 import { motion } from "framer-motion";
+import { Menu } from "./Menu";
 
 const maincss = css`
   background: var(--transdark);
@@ -218,6 +219,7 @@ function App() {
           transition={{ duration: 1 }}
         />
         {freshload && <Collage hiscore={hiscore} newGame={newGame} />}
+        {freshload && <Menu hiscore={hiscore} newGame={newGame}></Menu>}
         <div
           css={css`
             position: relative;

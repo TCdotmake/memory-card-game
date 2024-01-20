@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { Menu } from "./Menu";
-
+import { motion } from "framer-motion";
 import _ from "lodash";
 import p0 from "./img/0.jpg";
 import p1 from "./img/1.jpg";
@@ -35,10 +35,10 @@ const center = css`
 `;
 
 const bgcss = css`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  margin: auto 0;
+  // position: absolute;
+  // top: 0;
+  // bottom: 0;
+  // margin: auto 0;
   flex-direction: row;
   overflow: hidden;
   background: var(--transbg);
@@ -52,6 +52,7 @@ function Collage({ hiscore, newGame }) {
   for (let i = 0; i < 10; i++) {
     arr.push(i);
   }
+  arr = _.shuffle(arr);
   return (
     <div
       css={[
@@ -62,12 +63,16 @@ function Collage({ hiscore, newGame }) {
         `,
       ]}
     >
-      <Menu hiscore={hiscore} newGame={newGame} />
-      <div css={[center, bgcss]}>
+      <motion.div
+        css={[center, bgcss]}
+        initial={{ x: -600 }}
+        animate={{ x: 0 }}
+        transition={{ duration: 1 }}
+      >
         {arr.map((n) => {
           return <img src={images[`p${n}`]} />;
         })}
-      </div>
+      </motion.div>
     </div>
   );
 }
