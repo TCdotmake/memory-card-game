@@ -1,0 +1,72 @@
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
+import { Card } from "./Card";
+
+const cardBtnCss = css`
+  border-radius: 0;
+  border: none;
+  padding: 0;
+  filter: drop-shadow(5px 5px 7px #424242);
+`;
+
+const cardContainer = css`
+  width: 100vw;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: min(2vw, 1rem);
+  background: var(--transbg);
+  margin-top: 2vh;
+  padding: 3vh 0;
+  @media (orientation: landscape) {
+    display: grid;
+    grid-template-columns: repeat(5, auto);
+  }
+  @media (orientation: portrait) and (max-width: 500px) {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+  }
+`;
+
+const artcss = css`
+  width: min(15vw, 200px);
+  aspect-ratio: 1.4 / 1;
+  object-fit: cover;
+  @media (orientation: portrait) {
+    width: 140px;
+  }
+  @media (orientation: portrait) and (min-width: 600px) {
+    width: 180px;
+  }
+  @media (orientation: landscape) {
+    max-width: 18vw;
+  }
+  @media (orientation: portrait) and (max-width: 500px) {
+    width: min(200px, 40vw);
+  }
+`;
+
+function Carousel({ data, deck, handleChooseCard }) {
+  const content = deck.map((n) => {
+    return (
+      <button
+        key={data[n].oracle_id}
+        onClick={handleChooseCard}
+        data-index={n}
+        css={cardBtnCss}
+      >
+        <Card
+          src={data[n].image_uris.art_crop}
+          alt={data[n].name}
+          index={n}
+        ></Card>
+      </button>
+    );
+  });
+  return <div css={cardContainer}>{content}</div>;
+}
+
+export { Carousel };
