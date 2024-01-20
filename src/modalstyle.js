@@ -8,11 +8,11 @@ const modalstyle = css`
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  color: white;
+  color: var(--white);
   background: var(--primary);
-  padding: 1.3rem 1rem;
+  padding: 1rem;
   border-radius: 10px;
-  border: 1px solid white;
+  border: 1px solid var(--white);
   filter: drop-shadow(5px 5px 7px #424242);
   > h2,
   h3,

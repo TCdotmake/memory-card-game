@@ -60,7 +60,7 @@ const scorecss = css`
 const logocss = css`
   margin: 2vh 5vw 0 5vw;
   @media (orientation: portrait) {
-    max-width: 75vw;
+    max-width: 60vw;
   }
   @media (orientation: landscape) {
     max-height: 20vh;

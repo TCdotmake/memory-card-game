@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { modalstyle, ngbtn } from "./modalstyle";
+import { Btnbar } from "./Btnbar";
 
 function Menu({ score, hiscore, newGame }) {
   return (
@@ -11,9 +12,7 @@ function Menu({ score, hiscore, newGame }) {
       </p>
 
       <h3>High Score: {hiscore}</h3>
-      <button css={ngbtn} onClick={newGame}>
-        New Game
-      </button>
+      <Btnbar newGame={newGame}></Btnbar>
     </div>
   );
 }

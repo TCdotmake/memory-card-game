@@ -8,10 +8,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
-
+  --white: rgb(229, 234, 212);
   --transbg: rgba(255, 255, 255, 0.5);
   --transdark: rgba(0, 0, 0, 0.3);
-  --primary: #7069acaa;
+  --primary: #4b386aaa;
 }
 body {
   margin: 0;

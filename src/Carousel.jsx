@@ -32,7 +32,7 @@ const cardContainer = css`
 `;
 
 const artcss = css`
-  width: min(20vw, 200px);
+  width: min(15vw, 200px);
   aspect-ratio: 1.4 / 1;
   object-fit: cover;
   @media (orientation: portrait) {
