@@ -1,14 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 /** @jsxImportSource @emotion/react */
-import { ClassNames, css } from "@emotion/react";
+import { css } from "@emotion/react";
 import "./App.css";
 import _ from "lodash";
 
-import { CSSTransition } from "react-transition-group";
 import { Carousel } from "./Carousel";
 import logoH from "../public/logo-900x150.png";
 import logoV from "../public/logo-650x407.png";
-import { Menu } from "./Menu";
 import { Retry } from "./Retry";
 import { Collage } from "./collage";
 const maincss = css`

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { useState } from "react";
+import { Card } from "./Card";
 
 const cardBtnCss = css`
   border-radius: 0;
@@ -50,10 +50,6 @@ const artcss = css`
 `;
 
 function Carousel({ data, deck, handleChooseCard }) {
-  const [load, setload] = useState(0);
-  const onload = () => {
-    setload(load + 1);
-  };
   const content = deck.map((n) => {
     return (
       <button
@@ -62,13 +58,11 @@ function Carousel({ data, deck, handleChooseCard }) {
         data-index={n}
         css={cardBtnCss}
       >
-        <img
-          onLoad={onload}
+        <Card
           src={data[n].image_uris.art_crop}
           alt={data[n].name}
-          data-index={n}
-          css={artcss}
-        ></img>
+          index={n}
+        ></Card>
       </button>
     );
   });
