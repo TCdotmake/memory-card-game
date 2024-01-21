@@ -8,4 +8,5 @@ Used mainly for shuffle
 CSS in JS styling library
 #Framer motion
 Basic animaitons
-
+# inkscape
+editor for various visual assets
