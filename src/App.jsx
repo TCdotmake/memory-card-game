@@ -1,9 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-
 import _ from "lodash";
-
 import { Carousel } from "./Carousel";
 import logoH from "../public/logo-900x150.png";
 import logoV from "../public/logo-650x407.png";
@@ -51,6 +49,10 @@ const logocss = css`
   }
 `;
 
+const loadLocalData = () => {
+  return localStorage.getItem("hiScore");
+};
+
 function App() {
   const sourceURL =
     "https://api.scryfall.com/cards/search?include_extras=true&include_variations=true&order=set&q=e%3Awho&unique=prints";
@@ -66,8 +68,8 @@ function App() {
   const [range, setrange] = useState(10);
   const [gamesize, setgamesize] = useState(10);
   const [score, setscore] = useState(0);
-  const [hiscore, sethiscore] = useState(0);
-  const nodeRef = useRef(null);
+  const [hiscore, sethiscore] = useState(loadLocalData() || 0);
+
   async function getData(sourceURL) {
     const response = await fetch(sourceURL);
     const data = await response.json();
@@ -113,7 +115,6 @@ function App() {
 
   useEffect(() => {
     updateDataIndex();
-    console.log(data[0]);
   }, [data]);
 
   const newGame = () => {
@@ -139,6 +140,7 @@ function App() {
       }
       //valid choice
       else if (!discard.includes(cardIndex)) {
+        //update discard pile
         setdiscard((preState) => {
           let newState = [...preState];
           newState.push(cardIndex);
@@ -175,11 +177,11 @@ function App() {
   };
 
   function updateScore() {
-    let base = discard.length + 1;
-    let tempscore = Math.trunc(Math.pow(base, 1.5));
+    let tempscore = discard.length + 1;
     setscore(tempscore);
     if (tempscore > hiscore) {
       sethiscore(tempscore);
+      localStorage.setItem("hiScore", tempscore);
     }
   }
 
@@ -218,7 +220,7 @@ function App() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1 }}
         />
-        {freshload && <Collage hiscore={hiscore} newGame={newGame} />}
+        {freshload && <Collage />}
         {freshload && <Menu hiscore={hiscore} newGame={newGame}></Menu>}
         <div
           css={css`
@@ -234,6 +236,7 @@ function App() {
 
           {deck.length > 0 && (
             <Carousel
+              active={active}
               data={data}
               deck={deck}
               handleChooseCard={handleChooseCard}

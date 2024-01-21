@@ -35,10 +35,6 @@ const center = css`
 `;
 
 const bgcss = css`
-  // position: absolute;
-  // top: 0;
-  // bottom: 0;
-  // margin: auto 0;
   flex-direction: row;
   overflow: hidden;
   background: var(--transbg);
@@ -47,7 +43,7 @@ const bgcss = css`
     max-height: 25vh;
   }
 `;
-function Collage({ hiscore, newGame }) {
+function Collage() {
   let arr = [];
   for (let i = 0; i < 10; i++) {
     arr.push(i);
@@ -70,7 +66,7 @@ function Collage({ hiscore, newGame }) {
         transition={{ duration: 1 }}
       >
         {arr.map((n) => {
-          return <img src={images[`p${n}`]} />;
+          return <img key={n} src={images[`p${n}`]} />;
         })}
       </motion.div>
     </div>

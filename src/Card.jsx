@@ -1,17 +1,21 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-
-import { useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 function Card({ src, alt, index }) {
-  const nodeRef = useRef(null);
   return (
-    <img
-      ref={nodeRef}
-      src={src}
-      alt={alt}
-      data-index={index}
-      className="img-src"
-    ></img>
+    <AnimatePresence>
+      <motion.img
+        src={src}
+        key={src}
+        alt={alt}
+        data-index={index}
+        className="img-src"
+        initial={{ rotateY: 90 }}
+        animate={{ rotateY: 0 }}
+        exit={{ rotateY: 90 }}
+        transition={{ duration: 0.5 }}
+      ></motion.img>
+    </AnimatePresence>
   );
 }
 

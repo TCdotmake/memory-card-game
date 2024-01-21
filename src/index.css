@@ -12,6 +12,7 @@
   --transbg: rgba(255, 255, 255, 0.5);
   --transdark: rgba(0, 0, 0, 0.3);
   --primary: #4b386aaa;
+  font-size: 16px;
 }
 #root {
   width: 100vw;
