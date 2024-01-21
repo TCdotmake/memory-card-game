@@ -1,14 +1,15 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import "./App.css";
 import _ from "lodash";
-
 import { Carousel } from "./Carousel";
 import logoH from "../public/logo-900x150.png";
 import logoV from "../public/logo-650x407.png";
 import { Retry } from "./Retry";
-import { Collage } from "./collage";
+import { Collage } from "./Collage";
+import { motion } from "framer-motion";
+import { Menu } from "./Menu";
+
 const maincss = css`
   background: var(--transdark);
   position: relative;
@@ -37,24 +38,6 @@ const imgcss = css`
   }
 `;
 
-const scorecss = css`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
-  background: var(--transbg);
-
-  > p {
-    padding: 0;
-    margin: 10vw;
-  }
-`;
-
 const logocss = css`
   margin: 2vh 5vw 0 5vw;
   @media (orientation: portrait) {
@@ -65,6 +48,10 @@ const logocss = css`
     margin-top: 10vh;
   }
 `;
+
+const loadLocalData = () => {
+  return localStorage.getItem("hiScore");
+};
 
 function App() {
   const sourceURL =
@@ -81,8 +68,8 @@ function App() {
   const [range, setrange] = useState(10);
   const [gamesize, setgamesize] = useState(10);
   const [score, setscore] = useState(0);
-  const [hiscore, sethiscore] = useState(0);
-  const nodeRef = useRef(null);
+  const [hiscore, sethiscore] = useState(loadLocalData() || 0);
+
   async function getData(sourceURL) {
     const response = await fetch(sourceURL);
     const data = await response.json();
@@ -128,7 +115,6 @@ function App() {
 
   useEffect(() => {
     updateDataIndex();
-    console.log(data[0]);
   }, [data]);
 
   const newGame = () => {
@@ -154,6 +140,7 @@ function App() {
       }
       //valid choice
       else if (!discard.includes(cardIndex)) {
+        //update discard pile
         setdiscard((preState) => {
           let newState = [...preState];
           newState.push(cardIndex);
@@ -190,11 +177,11 @@ function App() {
   };
 
   function updateScore() {
-    let base = discard.length + 1;
-    let tempscore = Math.trunc(Math.pow(base, 1.5));
+    let tempscore = discard.length + 1;
     setscore(tempscore);
     if (tempscore > hiscore) {
       sethiscore(tempscore);
+      localStorage.setItem("hiScore", tempscore);
     }
   }
 
@@ -225,8 +212,16 @@ function App() {
           <img src="xl.jpg"></img>
         </picture>
 
-        <img id="mainLogo" src={logoH} css={logocss} />
-        {freshload && <Collage hiscore={hiscore} newGame={newGame} />}
+        <motion.img
+          id="mainLogo"
+          src={logoH}
+          css={logocss}
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1 }}
+        />
+        {freshload && <Collage />}
+        {freshload && <Menu hiscore={hiscore} newGame={newGame}></Menu>}
         <div
           css={css`
             position: relative;
@@ -241,6 +236,7 @@ function App() {
 
           {deck.length > 0 && (
             <Carousel
+              active={active}
               data={data}
               deck={deck}
               handleChooseCard={handleChooseCard}

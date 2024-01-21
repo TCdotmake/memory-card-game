@@ -7,6 +7,7 @@ const btndiv = css`
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
+  margin-top: 1rem;
   > * {
     background: var(--white);
     color: var(--primary);

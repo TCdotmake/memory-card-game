@@ -12,6 +12,11 @@
   --transbg: rgba(255, 255, 255, 0.5);
   --transdark: rgba(0, 0, 0, 0.3);
   --primary: #4b386aaa;
+  font-size: 16px;
+}
+#root {
+  width: 100vw;
+  text-align: center;
 }
 body {
   margin: 0;
@@ -48,24 +53,6 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-.card-enter {
-  opacity: 0;
-}
-
-.card-enter-active {
-  opacity: 1;
-  transition: opacity 700ms;
-}
-
-.card-exit {
-  opacity: 1;
-}
-
-.card-exit-active {
-  opacity: 0;
-  transition: opacity 700ms;
 }
 
 .img-src {
